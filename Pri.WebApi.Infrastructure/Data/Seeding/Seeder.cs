@@ -44,6 +44,8 @@ namespace Pri.CleanArchitecture.Infrastructure.Data.Seeding
                 new {ProductsId=4,PropertiesId=3 },
                 new {ProductsId=4,PropertiesId=4 },
             };
+
+            //Identity seeding
             modelBuilder.Entity<Category>().HasData(categories);
             modelBuilder.Entity<Product>().HasData(products);
             modelBuilder.Entity<Property>().HasData(properties);

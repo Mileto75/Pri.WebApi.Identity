@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Pri.WebApi.Core.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,5 +15,6 @@ namespace Pri.CleanArchitecture.Core.Entities
         public string Description { get; set; }
         public ICollection<Property> Properties { get; set; }
         public decimal Price { get; set; }
+        public ICollection<ApplicationUser> Owners { get; set; }
     }
 }

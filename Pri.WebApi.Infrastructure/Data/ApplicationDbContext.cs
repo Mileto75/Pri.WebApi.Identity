@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Pri.CleanArchitecture.Core.Entities;
 using Pri.CleanArchitecture.Infrastructure.Data.Seeding;
+using Pri.WebApi.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Pri.CleanArchitecture.Infrastructure.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         //dbsets
         public DbSet<Product> Products { get; set; }

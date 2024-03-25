@@ -5,6 +5,7 @@ using Pri.CleanArchitecture.Core.Interfaces.Services;
 using Pri.CleanArchitecture.Core.Services;
 using Pri.CleanArchitecture.Infrastructure.Data;
 using Pri.CleanArchitecture.Infrastructure.Repositories;
+using Pri.WebApi.Core.Entities;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,7 +20,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options
     => options
     .UseSqlServer(builder.Configuration.GetConnectionString("DefaultDatabase")).EnableSensitiveDataLogging());
 //Add Identity service
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     {
         //in production code
         options.SignIn.RequireConfirmedEmail = true;
