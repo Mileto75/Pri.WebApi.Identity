@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Pri.Cleanarchitecture.Web.ViewModels;
 using Pri.CleanArchitecture.Core.Interfaces.Services;
 
@@ -13,8 +14,10 @@ namespace Pri.Cleanarchitecture.Web.Controllers
             _productService = productService;
         }
 
+        [Authorize]
         public async Task<IActionResult> Index()
         {
+            var user = User;
             var result = await _productService.GetAllAsync();
             if(result.IsSuccess)
             {

@@ -35,6 +35,11 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     })
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
+//change application cookies
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Auth/Auth/Login";
+});
     
 builder.Services.AddControllersWithViews();
 var app = builder.Build();
