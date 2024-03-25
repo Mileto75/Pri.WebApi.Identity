@@ -20,4 +20,8 @@
     <ProjectReference Include="..\Pri.WebApi.Infrastructure\Pri.WebApi.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\Auth\Data\" />
+    <Folder Include="Areas\Auth\Models\" />
+  </ItemGroup>
 </Project>

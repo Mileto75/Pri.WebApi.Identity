@@ -54,6 +54,13 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+//default area route
+app.MapControllerRoute(
+    name: "areaDefault",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+    );
+   
+//default Mvc route
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
