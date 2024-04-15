@@ -18,9 +18,16 @@ namespace Pri.WebApi.Web.Areas.Auth.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login(string returnUrl)
         {
-            return View();
+            AuthLoginViewModel authLoginViewModel = new AuthLoginViewModel();
+            authLoginViewModel.ReturnUrl = "/Products";
+            //check if returnurl
+            if (!string.IsNullOrEmpty(returnUrl))
+            {
+                authLoginViewModel.ReturnUrl = returnUrl;
+            }
+            return View(authLoginViewModel);
         }
         [HttpPost]
         public async Task<IActionResult> Login(AuthLoginViewModel authLoginViewModel)
@@ -34,7 +41,7 @@ namespace Pri.WebApi.Web.Areas.Auth.Controllers
                 authLoginViewModel.Password,false,false);
             if(result.Succeeded)
             {
-                return RedirectToAction("Index", "Home",new {Area=""});
+                return Redirect(authLoginViewModel.ReturnUrl);
             }
             //not authenticated
             ModelState.AddModelError("", "Wrong credentials!");
