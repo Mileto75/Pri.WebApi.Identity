@@ -77,6 +77,18 @@ namespace Pri.CleanArchitecture.Infrastructure.Data.Seeding
                 DateOfBirth = DateTime.Now,
             };
             //password hash
+            //add classic roles
+            var roles = new IdentityRole[]
+            {
+                new IdentityRole { Id = "1",Name = "Admin",NormalizedName="ADMIN"},
+                new IdentityRole { Id = "2",Name = "User",NormalizedName="USER"}
+            };
+            //add users to roles
+            var userRoles = new IdentityUserRole<string>[]
+            {
+                new IdentityUserRole<string>{RoleId = "1",UserId="1"},//admin
+                new IdentityUserRole<string>{RoleId = "2",UserId="2"},//user
+            };
             IPasswordHasher<ApplicationUser> passwordHasher = new PasswordHasher<ApplicationUser>();
             admin.PasswordHash = passwordHasher.HashPassword(admin, "Test123");
             user.PasswordHash = passwordHasher.HashPassword(user, "Test123");
@@ -85,6 +97,10 @@ namespace Pri.CleanArchitecture.Infrastructure.Data.Seeding
             modelBuilder.Entity<Property>().HasData(properties);
             modelBuilder.Entity($"{nameof(Product)}{nameof(Property)}").HasData(productsProperties);
             modelBuilder.Entity<ApplicationUser>().HasData(admin, user);
+            //add userroles to database
+            modelBuilder.Entity<IdentityRole>().HasData(roles);
+            modelBuilder.Entity<IdentityUserRole<string>>().HasData(userRoles);
+
         }
     }
 }

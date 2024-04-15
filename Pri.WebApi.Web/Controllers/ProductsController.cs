@@ -53,6 +53,7 @@ namespace Pri.Cleanarchitecture.Web.Controllers
             Response.StatusCode = 404;
             return View("Error",result.Errors); 
         }
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create()
         {
             var result = await _productService.CreateAsync

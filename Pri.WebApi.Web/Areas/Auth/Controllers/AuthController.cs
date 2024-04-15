@@ -111,6 +111,11 @@ namespace Pri.WebApi.Web.Areas.Auth.Controllers
             }
             return RedirectToAction("login");
         }
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
 
     }
 }
