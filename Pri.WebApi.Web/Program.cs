@@ -64,7 +64,11 @@ app.MapControllerRoute(
     name: "areaDefault",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
     );
-   
+app.MapControllerRoute(
+   name: "emailConfirmation",
+   pattern: "Auth/Auth/{id}/{EmailConfirmationToken}",
+   defaults: new {Area="Auth",Controller="Auth",Action="ConfirmEmail"}
+   );
 //default Mvc route
 app.MapControllerRoute(
     name: "default",
