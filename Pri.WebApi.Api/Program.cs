@@ -1,9 +1,14 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Pri.CleanArchitecture.Core.Interfaces.Repositories;
 using Pri.CleanArchitecture.Core.Interfaces.Services;
 using Pri.CleanArchitecture.Core.Services;
 using Pri.CleanArchitecture.Infrastructure.Data;
 using Pri.CleanArchitecture.Infrastructure.Repositories;
+using Pri.WebApi.Core.Entities;
+using System.Text;
 
 namespace Pri.WebApi.Food.Api
 {
@@ -23,7 +28,35 @@ namespace Pri.WebApi.Food.Api
             builder.Services.AddDbContext<ApplicationDbContext>(options
                 => options
                 .UseSqlServer(builder.Configuration.GetConnectionString("DefaultDatabase")).EnableSensitiveDataLogging());
-
+            //Add Identity service
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                //in production code
+                options.SignIn.RequireConfirmedEmail = true;
+                options.User.RequireUniqueEmail = true;
+                //password testing rules only for testing purposes!!!
+                options.Password.RequiredUniqueChars = 0;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 4;
+            }).AddEntityFrameworkStores<ApplicationDbContext>();
+            //Configure JWT token authentication
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options => options.TokenValidationParameters
+            = new TokenValidationParameters 
+            {
+                ValidAudience = builder.Configuration["JWTConfiguration:Audience"],
+                ValidIssuer = builder.Configuration["JWTConfiguration:Issuer"],
+                IssuerSigningKey = new SymmetricSecurityKey
+                (Encoding.UTF8.GetBytes(builder.Configuration["JWTConfiguration:UserSecret"]))
+            });
+            builder.Services.AddAuthorization();
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -40,8 +73,8 @@ namespace Pri.WebApi.Food.Api
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapControllers();
 

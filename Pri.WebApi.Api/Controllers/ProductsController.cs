@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Pri.CleanArchitecture.Core.Interfaces.Services;
 using Pri.WebApi.Api.Dtos.Request;
