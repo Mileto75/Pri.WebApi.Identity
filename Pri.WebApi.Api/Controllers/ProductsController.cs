@@ -28,6 +28,7 @@ namespace Pri.WebApi.Food.Api.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Get()
         {
             var result = await _productService.GetAllAsync();

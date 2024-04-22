@@ -32,7 +32,7 @@ namespace Pri.WebApi.Food.Api
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
                 //in production code
-                options.SignIn.RequireConfirmedEmail = true;
+                options.SignIn.RequireConfirmedEmail = false;
                 options.User.RequireUniqueEmail = true;
                 //password testing rules only for testing purposes!!!
                 options.Password.RequiredUniqueChars = 0;
