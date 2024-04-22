@@ -50,6 +50,7 @@ namespace Pri.WebApi.Api.Controllers
                 var token = new JwtSecurityToken(
                     audience: audience,
                     issuer: issuer,
+                    claims: claims,
                     notBefore: DateTime.UtcNow,
                     expires: expirationDate,
                     signingCredentials: signinCredentials

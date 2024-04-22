@@ -5,6 +5,7 @@ using Pri.WebApi.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -77,29 +78,60 @@ namespace Pri.CleanArchitecture.Infrastructure.Data.Seeding
                 DateOfBirth = DateTime.Now,
             };
             //password hash
-            //add classic roles
-            var roles = new IdentityRole[]
-            {
-                new IdentityRole { Id = "1",Name = "Admin",NormalizedName="ADMIN"},
-                new IdentityRole { Id = "2",Name = "User",NormalizedName="USER"}
-            };
-            //add users to roles
-            var userRoles = new IdentityUserRole<string>[]
-            {
-                new IdentityUserRole<string>{RoleId = "1",UserId="1"},//admin
-                new IdentityUserRole<string>{RoleId = "2",UserId="2"},//user
-            };
             IPasswordHasher<ApplicationUser> passwordHasher = new PasswordHasher<ApplicationUser>();
             admin.PasswordHash = passwordHasher.HashPassword(admin, "Test123");
             user.PasswordHash = passwordHasher.HashPassword(user, "Test123");
+            //add claims
+            var userClaims = new IdentityUserClaim<string>[]
+            {
+                new IdentityUserClaim<string>{
+                Id = 1,
+                UserId = "1",
+                ClaimType = ClaimTypes.Role,
+                ClaimValue = "admin"
+                },
+                new IdentityUserClaim<string>{
+                Id = 2,
+                UserId = "2",
+                ClaimType = ClaimTypes.Role,
+                ClaimValue = "user"
+                },
+                new IdentityUserClaim<string>{
+                Id = 3,
+                UserId = "1",
+                ClaimType = ClaimTypes.DateOfBirth,
+                ClaimValue = admin.DateOfBirth.ToShortDateString()
+                },
+                new IdentityUserClaim<string>{
+                Id = 4,
+                UserId = "2",
+                ClaimType = ClaimTypes.DateOfBirth,
+                ClaimValue = user.DateOfBirth.ToShortDateString()
+                },
+            };
+            //add classic roles
+            //var roles = new IdentityRole[]
+            //{
+            //    new IdentityRole { Id = "1",Name = "Admin",NormalizedName="ADMIN"},
+            //    new IdentityRole { Id = "2",Name = "User",NormalizedName="USER"}
+            //};
+            ////add users to roles
+            //var userRoles = new IdentityUserRole<string>[]
+            //{
+            //    new IdentityUserRole<string>{RoleId = "1",UserId="1"},//admin
+            //    new IdentityUserRole<string>{RoleId = "2",UserId="2"},//user
+            //};
             modelBuilder.Entity<Category>().HasData(categories);
             modelBuilder.Entity<Product>().HasData(products);
             modelBuilder.Entity<Property>().HasData(properties);
             modelBuilder.Entity($"{nameof(Product)}{nameof(Property)}").HasData(productsProperties);
             modelBuilder.Entity<ApplicationUser>().HasData(admin, user);
-            //add userroles to database
-            modelBuilder.Entity<IdentityRole>().HasData(roles);
-            modelBuilder.Entity<IdentityUserRole<string>>().HasData(userRoles);
+            //add classic userroles to database
+            //modelBuilder.Entity<IdentityRole>().HasData(roles);
+            //modelBuilder.Entity<IdentityUserRole<string>>().HasData(userRoles);
+            //add user claims to database
+            modelBuilder.Entity<IdentityUserClaim<string>>().HasData(userClaims);
+
 
         }
     }
