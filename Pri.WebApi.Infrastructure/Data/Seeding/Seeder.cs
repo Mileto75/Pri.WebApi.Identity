@@ -131,8 +131,6 @@ namespace Pri.CleanArchitecture.Infrastructure.Data.Seeding
             //modelBuilder.Entity<IdentityUserRole<string>>().HasData(userRoles);
             //add user claims to database
             modelBuilder.Entity<IdentityUserClaim<string>>().HasData(userClaims);
-
-
         }
     }
 }

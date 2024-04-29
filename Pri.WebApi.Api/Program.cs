@@ -8,6 +8,7 @@ using Pri.CleanArchitecture.Core.Services;
 using Pri.CleanArchitecture.Infrastructure.Data;
 using Pri.CleanArchitecture.Infrastructure.Repositories;
 using Pri.WebApi.Core.Entities;
+using System.Security.Claims;
 using System.Text;
 
 namespace Pri.WebApi.Food.Api
@@ -56,7 +57,16 @@ namespace Pri.WebApi.Food.Api
                 IssuerSigningKey = new SymmetricSecurityKey
                 (Encoding.UTF8.GetBytes(builder.Configuration["JWTConfiguration:UserSecret"]))
             });
-            builder.Services.AddAuthorization();
+            builder.Services.AddAuthorization(options => {
+                options.AddPolicy("admin", policy =>
+                {
+                    policy.RequireClaim(ClaimTypes.Role, "admin");
+                });
+                options.AddPolicy("user", policy =>
+                {
+                    policy.RequireClaim(ClaimTypes.Role, "user");
+                });
+            });
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
