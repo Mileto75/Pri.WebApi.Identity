@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using Pri.WebApi.Api.Dtos.Request;
 using Pri.WebApi.Core.Entities;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 
 namespace Pri.WebApi.Api.Controllers
@@ -61,6 +62,43 @@ namespace Pri.WebApi.Api.Controllers
                 return Ok(serializedToken);
             }
             return BadRequest("Wrong credentials");
+        }
+        [HttpPost("Register")]
+        public async Task<IActionResult> Register(AuthRegisterDto authRegisterDto)
+        {
+            //create the user
+            var newUser = new ApplicationUser
+            {
+                Firstname = authRegisterDto.Firstname,
+                Lastname = authRegisterDto.Lastname,
+                DateOfBirth = authRegisterDto.DateOfBirth,
+                Email = authRegisterDto.Username,
+                UserName = authRegisterDto.Username,
+                EmailConfirmed = true,//only for production
+            };
+            //create with usermanager
+            var result = await _userManager.CreateAsync(newUser,authRegisterDto.Password);
+            if (!result.Succeeded) 
+            {
+                foreach(var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+                return BadRequest(ModelState.Values);
+            }
+            //add claims
+            var claims = new Claim[]
+            {
+                new Claim(ClaimTypes.Role,"user"),
+                new Claim(ClaimTypes.DateOfBirth,newUser.DateOfBirth.ToShortDateString()),
+                //add more claims
+                //eg username
+                new Claim(ClaimTypes.Name,$"{newUser.Firstname} {newUser.Lastname}")
+            };
+            //add to the user
+            await _userManager.AddClaimsAsync(newUser, claims);
+            //return ok
+            return Ok("User registered!");
         }
     }
 }
