@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Pri.CleanArchitecture.Core.Interfaces.Repositories;
@@ -64,7 +65,36 @@ namespace Pri.WebApi.Food.Api
                 });
                 options.AddPolicy("user", policy =>
                 {
-                    policy.RequireClaim(ClaimTypes.Role, "user");
+                    policy.RequireAssertion(context =>
+                    {
+                        if (context.User.HasClaim(ClaimTypes.Role, "admin")
+                        || context.User.HasClaim(ClaimTypes.Role, "user"))
+                        {
+                            return true;
+                        }
+                        return false;
+                    });
+                });
+                //custom policy
+                options.AddPolicy("18+", policy => 
+                {
+                    policy.RequireAssertion(context =>
+                    {
+                        if(context.User.Claims != null)
+                        {
+                            //get the dob claim
+                            var dobClaim = context.User.Claims.FirstOrDefault(c
+                                => c.Type.Equals(ClaimTypes.DateOfBirth)).Value;
+                            //parse to date object
+                            var dobDate = DateTime.Parse(dobClaim);
+                            //check the years
+                            if(DateTime.Now.Year - dobDate.Year >= 18)
+                            {
+                                return true;
+                            }
+                        }
+                        return false;
+                    });
                 });
             });
             builder.Services.AddControllers();

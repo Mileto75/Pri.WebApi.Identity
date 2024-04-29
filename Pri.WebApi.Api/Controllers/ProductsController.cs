@@ -67,6 +67,7 @@ namespace Pri.WebApi.Food.Api.Controllers
             return NotFound(result.Errors);
         }
         [HttpGet("Search/ByName/{name}")]
+        [Authorize(Policy = "User")]
         public async Task<IActionResult> Search(string name)
         {
             var result = await _productService.SearchByNameAsync(name);
@@ -84,6 +85,7 @@ namespace Pri.WebApi.Food.Api.Controllers
             return Ok(result.Errors);
         }
         [HttpGet("Search/ByCategory/{id}")]
+        [Authorize(Policy = "18+")]
         public async Task<IActionResult> ByCategoryId(int id)
         {
             var result = await _productService.SearchByCategoryIdAsync(id);
@@ -101,6 +103,7 @@ namespace Pri.WebApi.Food.Api.Controllers
             return Ok(result.Errors);
         }
         [HttpPost]
+        [Authorize(Policy = "admin")]
         public async Task<IActionResult> Create(ProductCreateDto productCreateDto)
         {
             var result = await _productService.CreateAsync(
